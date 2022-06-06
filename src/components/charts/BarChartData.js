@@ -12,6 +12,7 @@ import {View} from 'react-native-web'
 import { Bar } from 'react-chartjs-2';
 import configBarLabels from '../helpers/chartHelpers/configBarLabels';
 import configBarChartData from '../helpers/chartHelpers/configBarChartData';
+import externalTooltipHandler from '../helpers/chartHelpers/BarToolTip';
 
 ChartJS.register(
     CategoryScale,
@@ -23,6 +24,8 @@ ChartJS.register(
 );
 
 var labels = ["Loading", "Please", "Wait"]
+
+
 const options = {
   responsive: true,
   maintainAspectRatio: true,
@@ -36,6 +39,12 @@ const options = {
       display: false,
       text: 'Chart.js Line Chart',
     },
+    tooltip: {
+      enabled: false,
+      position: 'nearest',
+      yAlign: 'top',
+      external: externalTooltipHandler
+    }
   },
 };
 

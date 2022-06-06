@@ -20,7 +20,7 @@ function configBarChartData(data, label) {
     }
 
     var chartDataset = [{
-        label: "Recently Played Genres",
+        label: "Recently Played",
         data: chartData,
         backgroundColor: colors,
     }]
