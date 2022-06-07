@@ -6,7 +6,8 @@ import Redirect from './components/Redirect';
 
 function App() {
   return (
-    <View style={{backgroundColor: '#191414', height: window.innerHeight}}>
+    // style={{backgroundColor: '#191414', height: window.innerHeight}}
+    <View >
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login/>}/>

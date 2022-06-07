@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import {View} from 'react-native-web'
 import getUserInfo from './helpers/spotifyHelpers/getUserInfo';
-import LineChartData from './charts/LineChartData';
-import BarChartData from './charts/BarChartData';
+import ChartCard from './mainApp/ChartCard';
+import PlayedRecently from './mainApp/PlayedRecently';
+
 function MainApp() {
   const [user, setUser] = useState({display_name: ""})
   const [userData, setUserData] = useState([])
@@ -22,17 +23,15 @@ function MainApp() {
     userInfo()
   },[]) 
 
-
+  // , color:'white', backgroundColor: '#191414'
   return (
-    <View style={{alignItems:'center', color:'white', backgroundColor: '#191414'}}>
+    <View style={{alignItems:'center'}}>
       <h1>Welcome {user.display_name}!</h1>
-      <View style={{marginBottom: 20, alignItems:'center'}}>
-        <h2>Genres Played Played vs. Time</h2>
-        <LineChartData data = {userData}></LineChartData>
+      <View style={{marginBottom: 10}}>
+        <ChartCard data={userData}/>
       </View>
-      <View style={{marginBottom: 20, alignItems:'center'}}>
-        <h2>Genres Recently Played</h2>
-        <BarChartData data = {userData}></BarChartData>
+      <View style={{marginBottom: 10}}>        
+        <PlayedRecently data={userData}/>
       </View>
     </View>
   );

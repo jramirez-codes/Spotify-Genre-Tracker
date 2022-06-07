@@ -30,7 +30,8 @@ function Login() {
   }
 
   return (
-    <View style={{backgroundColor: '#191414', height: "100%"}}>
+    // style={{backgroundColor: '#191414', height: "100%"}}
+    <View>
       {Object.keys(token).length === 0? 
       (
         <View style={{alignItems:'center', marginTop: 20}}>

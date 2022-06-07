@@ -48,7 +48,7 @@ async function getUserInfo(token) {
     }
     window.localStorage.setItem("toolTipInfo", JSON.stringify(toolTipInfo))
 
-    return [user, genres, timeFixed.reverse()]
+    return [user, genres, timeFixed.reverse(), userListened.items]
 }
 
 async function extractArtistID(userListened) {
@@ -149,16 +149,18 @@ async function filterGenres(genres, images, tracks) {
 
     // console.log(allGenreDataSorted)
     // Filter names so it is shorter
+    var newNames = []
     for(var m = 0; m < allGenreDataSorted.length; m++) {
         var names = allGenreDataSorted[m][2].split(" / ")
         if(names.length > 2) {
             // Array Splitting
-            var newNames = []
+            newNames = []
             for(var n = 0; n < names.length; n++) {
                 newNames = newNames.concat(names[n].split(" "))
             }
             
             // Check is names dont have the same value
+            // eslint-disable-next-line
             if(Object.keys(newNames).reduce((a, b) => newNames[a] > newNames[b] ? a : b) > 1) {
                 allGenreDataSorted[m][2] = findMostFrequest(names)
             }

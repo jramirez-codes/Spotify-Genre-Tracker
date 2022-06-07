@@ -4,7 +4,7 @@ const getOrCreateTooltip = (chart) => {
     if (!tooltipEl) {
       tooltipEl = document.createElement('div');
       tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
-      tooltipEl.style.borderRadius = '0px';
+      tooltipEl.style.borderRadius = '10px';
       tooltipEl.style.color = 'white';
       tooltipEl.style.opacity = 1;
       tooltipEl.style.pointerEvents = 'none';
@@ -38,7 +38,7 @@ const externalTooltipHandler = (context) => {
     if (tooltip.body) {
       // Data from the chart
       const titleLines = tooltip.title || [];
-      const bodyLines = tooltip.body.map(b => b.lines);
+      // const bodyLines = tooltip.body.map(b => b.lines);
   
       const mainBody = document.createElement('div');
       titleLines.forEach(title => {
