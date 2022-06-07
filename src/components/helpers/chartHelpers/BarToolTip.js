@@ -4,7 +4,7 @@ const getOrCreateTooltip = (chart) => {
     if (!tooltipEl) {
       tooltipEl = document.createElement('div');
       tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
-      tooltipEl.style.borderRadius = '3px';
+      tooltipEl.style.borderRadius = '0px';
       tooltipEl.style.color = 'white';
       tooltipEl.style.opacity = 1;
       tooltipEl.style.pointerEvents = 'none';
@@ -12,7 +12,8 @@ const getOrCreateTooltip = (chart) => {
       tooltipEl.style.transform = 'translate(-50%, 0)';
       tooltipEl.style.transition = 'all .1s ease';
   
-      const table = document.createElement('table');
+      // const table = document.createElement('table');
+      const table = document.createElement('div')
       table.style.margin = '0px';
   
       tooltipEl.appendChild(table);
@@ -35,80 +36,57 @@ const externalTooltipHandler = (context) => {
   
     // Set Text
     if (tooltip.body) {
+      // Data from the chart
       const titleLines = tooltip.title || [];
       const bodyLines = tooltip.body.map(b => b.lines);
   
-      const tableHead = document.createElement('thead');
-      // var imageCount = 0
+      const mainBody = document.createElement('div');
       titleLines.forEach(title => {
-        const tr = document.createElement('tr');
-        tr.style.borderWidth = 0;
+        // Top Header
+        const headTitle = document.createElement('div')
+        headTitle.innerHTML = "<h4>"+title+"</h4>"
+        headTitle.style.textAlign = 'center'
+        headTitle.style.marginTop = "-20px"
+        mainBody.appendChild(headTitle)
+
+        // For Tracks
+        var spotifyTracks = window.localStorage.getItem("toolTipInfo")
+        if(spotifyTracks !== null) {
+          var tracks = JSON.parse(spotifyTracks)
   
-        const th = document.createElement('th');
-        th.style.borderWidth = 0;
-        const text = document.createTextNode(title);
-
-
-        // Break line
-        const br = document.createElement("br")
-
-        // For images
-        var spotifyImages = window.localStorage.getItem("spotifyImages")
-        const img = document.createElement('img');
-        if(spotifyImages !== null) {
-          var images = JSON.parse(spotifyImages)
-          // img.src = images[i][2].url
-          img.src = images[title][2].url
+          // Image
+          const img = document.createElement('img');
+          img.src = tracks.images[title][2].url
+          img.style.display = 'block'
+          img.style.margin = '0 auto'
+      
+          // Track name
+          const trackName = document.createElement('div');
+          trackName.innerHTML = '<p>'+tracks.trackNames[title]+'</p>'
+          trackName.style.textAlign = 'center'
+  
+          // Artist
+          const artistName = document.createElement('div');
+          artistName.innerHTML = '<p>'+tracks.artistNames[title]+'</p>'
+          artistName.style.textAlign = 'center'
+          artistName.style.marginTop = '-20px'
+          
+          // Adding to the document
+          mainBody.appendChild(img);
+          mainBody.appendChild(trackName);
+          mainBody.appendChild(artistName);
         }
-        else {
-          img.src = "https://www.gravatar.com/avatar/6fcc51ca5e7029116a383e7aeb0bbaa0?s=32&d=identicon&r=PG&f=1"
-        }
-        
-        th.appendChild(text);
-        tr.appendChild(th);
-        tableHead.appendChild(tr);
-        tableHead.appendChild(br)
-        tableHead.appendChild(img)
-      });
+      })
   
-      const tableBody = document.createElement('tbody');
-      bodyLines.forEach((body, i) => {
-        const colors = tooltip.labelColors[i];
-  
-        const span = document.createElement('span');
-        span.style.background = colors.backgroundColor;
-        span.style.borderColor = colors.borderColor;
-        span.style.borderWidth = '2px';
-        span.style.marginRight = '10px';
-        span.style.height = '10px';
-        span.style.width = '10px';
-        span.style.display = 'inline-block';
-  
-        const tr = document.createElement('tr');
-        tr.style.backgroundColor = 'inherit';
-        tr.style.borderWidth = 0;
-  
-        const td = document.createElement('td');
-        td.style.borderWidth = 0;
-  
-        const text = document.createTextNode(body);
-  
-        td.appendChild(span);
-        td.appendChild(text);
-        tr.appendChild(td);
-        tableBody.appendChild(tr);
-      });
-  
-      const tableRoot = tooltipEl.querySelector('table');
-  
+      // const tableRoot = tooltipEl.querySelector('table');
+      const tableRoot = tooltipEl.querySelector('div');
       // Remove old children
       while (tableRoot.firstChild) {
         tableRoot.firstChild.remove();
       }
   
       // Add new children
-      tableRoot.appendChild(tableHead);
-      tableRoot.appendChild(tableBody);
+      tableRoot.appendChild(mainBody)
     }
   
     const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;

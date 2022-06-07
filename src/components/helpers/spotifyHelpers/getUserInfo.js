@@ -21,23 +21,32 @@ async function getUserInfo(token) {
 
     // Extranct Image url
     var images = await extractImages(userListened.items)
-    
+
     // Extract Genres
     var genres = await extractGenres(artists)
 
     // Filter Genres
-    genres = await filterGenres(genres, images)
+    genres = await filterGenres(genres, images, userListened.items)
 
     // Get Filtered Time for labels
     var time = await getTime(userListened.items)
     var timeFixed = configTime(time)
 
-    // Store images so tool tip can get the data
+    // Stores images, artist name, and track name so tool tip can get the data
     images = {}
+    var artistNames = {}
+    var trackNames = {}
     for(var i  = 0; i < genres.length; i++) {
+        trackNames[genres[i][2]] = genres[i][4].name
+        artistNames[genres[i][2]] = genres[i][4].artists[0].name
         images[genres[i][2]] = genres[i][3]
     }
-    window.localStorage.setItem("spotifyImages", JSON.stringify(images))
+    var toolTipInfo = {
+        images: images,
+        trackNames: trackNames,
+        artistNames: artistNames
+    }
+    window.localStorage.setItem("toolTipInfo", JSON.stringify(toolTipInfo))
 
     return [user, genres, timeFixed.reverse()]
 }
@@ -65,10 +74,16 @@ async function extractGenres(artists) {
     return genres
 }
 
-async function filterGenres(genres, images) {
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+async function filterGenres(genres, images, tracks) {
     var uniqueGenres = new Set()
     var allGenres = []
     var genreImages = []
+    var filteredTracks = []
+
     for(var i = 0; i < genres.length; i++) {
         for(var j = 0; j < genres[i].length; j++) {
             // Check if it has genre
@@ -79,12 +94,10 @@ async function filterGenres(genres, images) {
                 // Push new items 
                 allGenres.push(genres[i][j])
                 genreImages.push(images[i])
+                filteredTracks.push(tracks[i].track)
             }
         }
     }
-
-    console.log(genreImages)
-    console.log(allGenres)
 
     // Creating Graph
     var allGenreData = []
@@ -105,7 +118,7 @@ async function filterGenres(genres, images) {
                 count = 0
             }
         }
-        allGenreData.push([totalCount, genreData.reverse(), allGenres[k], genreImages[k]])
+        allGenreData.push([totalCount, genreData.reverse(), allGenres[k], genreImages[k], filteredTracks[k]])
     }
 
     // Sort the date by least to greatest
@@ -115,9 +128,11 @@ async function filterGenres(genres, images) {
     var index = 1
     while(index !== allGenreDataSorted.length) {
         for(var inner = 0; inner < index; inner ++) {
+            // Make upercase 
+            allGenreDataSorted[inner][2] = capitalizeFirstLetter(allGenreDataSorted[inner][2])
             if( JSON.stringify(allGenreDataSorted[inner][1]) === JSON.stringify(allGenreDataSorted[index][1])) {
                 // Combine Name
-                allGenreDataSorted[inner][2] += " / " + allGenreDataSorted[index][2]
+                allGenreDataSorted[inner][2] += " / " + capitalizeFirstLetter(allGenreDataSorted[index][2])
                 // Remove item at index
                 allGenreDataSorted.splice(index, 1)
                 // Keep index the same
@@ -126,12 +141,6 @@ async function filterGenres(genres, images) {
         }
         index += 1
     }
-    
-    // var test = []
-    // for(var inx = 0; inx < allGenreDataSorted.length; inx++) {
-    //     test.push(allGenreDataSorted[inx][2])
-    // }
-    // console.log(test)
 
     // Only keeping the top 10 
     if(allGenreDataSorted.length > 10) {
