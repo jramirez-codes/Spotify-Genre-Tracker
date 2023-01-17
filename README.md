@@ -19,8 +19,8 @@ Although the spotify Api is really good and has a lot of functions, they were st
 https://youtu.be/U2ZeakluUYc
 
 ## Images
-![Example 1](./gitImages/1.jpg)
-![Example 1](./gitImages/2.jpg)
+![Example 1](./gitImages/1.png)
+![Example 1](./gitImages/2.png)
 
 ## How to use
 Clone the repository
