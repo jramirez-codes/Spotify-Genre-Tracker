@@ -5,6 +5,7 @@ var scope = "user-read-private user-read-recently-played streaming user-read-ema
 
 // Note this is an Implicit Grant Flow 
 function getToken() {
+    console.log(window.location.origin)
     window.location = `${spotifyAuthUrl}?client_id=${client_id}&redirect_uri=${window.location.origin}&scope=${scope}&response_type=token&show_dialog=true`
 }
 

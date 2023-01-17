@@ -6,7 +6,7 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Tooltip from '@mui/material/Tooltip'
 import WebPlayer from '../helpers/spotifyHelpers/spotifyWebPlayer'
-
+import WebPlayer2 from '../helpers/spotifyHelpers/spotifyWebPlayer2';
 export default function PlayedRecently(props) {
   const [songs, setSongs] = useState([])
   const [token, setToken] = useState("")
